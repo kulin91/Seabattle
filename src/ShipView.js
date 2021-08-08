@@ -6,5 +6,6 @@ class ShipView extends Ship {
 
     const div = document.createElement('div')
     div.classList.add('ship')
+    this.div = div
   }
 }

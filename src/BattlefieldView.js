@@ -56,4 +56,13 @@ class BattlefieldView extends Battlefield {
       cell.append(marker);
     }
   }
+
+  addShip(ship) {
+    if (!super.addShip(ship)) {
+      return false;
+    }
+
+    this.dock.append(ship.div)
+    return true;
+  }
 }
