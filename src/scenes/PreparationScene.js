@@ -12,6 +12,7 @@ const shipDatas = [
 ]
 
 class PreparationScene extends Scene {
+  draggedShip = null
   init() {
     const { player } = this.app
     for (const { size, direction, startX, startY } of shipDatas) {
@@ -23,7 +24,25 @@ class PreparationScene extends Scene {
     console.log("PreparationScene start")
   }
   update() {
-    console.log("PreparationScene update")
+    const { mouse, player } = this.app
+
+    // Потанциально хотим начать тянуть корабль
+    if (!this.draggedShip && mouse.left && mouse.pLeft) {
+      const ship = player.ships.find((ship) => ship.isUnder(mouse))
+
+      if (ship) {
+        this.draggedShip = ship
+      }
+    }
+
+    // Перетаскивание
+    if (mouse.left && this.draggedShip) {
+
+      const { left, top } = player.root.getBoundingClientRect()
+      this.draggedShip.div.style.left = `${mouse.x - left}px`
+      this.draggedShip.div.style.top = `${mouse.y - top}px`
+
+    }
   }
   stop() {
     console.log("PreparationScene stop")
