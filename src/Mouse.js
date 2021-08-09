@@ -15,6 +15,7 @@ class Mouse {
 
   delta = 0;
   pdelta = 0;
+
   constructor(element) {
     this.element = element;
 
@@ -22,8 +23,18 @@ class Mouse {
       this.x = e.clientX
       this.y = e.clientY
       this.delta = 0
+      this.space = false;
       this.under = true
     }
+
+    element.addEventListener('keydown', e => {
+      if (event.code == 'Space') {
+        this.tick()
+        const newDirection = this.space === false ? true : false
+        this.space = newDirection
+      }
+
+    });
 
     element.addEventListener('mousemove', e => {
       this.tick()
@@ -35,12 +46,14 @@ class Mouse {
 
       update(e)
     });
+
     element.addEventListener('mouseleave', e => {
       this.tick()
 
       update(e)
       this.under = false
     });
+
     element.addEventListener('mousedown', e => {
       this.tick()
 
@@ -75,5 +88,6 @@ class Mouse {
     this.pUnder = this.under;
     this.pLeft = this.left;
     this.pDelta = this.delta;
+    this.pSpace = this.space;
   }
 }
