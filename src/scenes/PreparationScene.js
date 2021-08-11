@@ -64,14 +64,26 @@ class PreparationScene extends Scene {
     }
     // Бросание
     if (!mouse.left && this.draggedShip) {
+      const ship = this.draggedShip
       this.draggedShip = null
+
+      const { left, top } = ship.div.getBoundingClientRect()
+      const { width, height } = player.cells[0][0].getBoundingClientRect()
+      const point = {
+        x: left + width / 2,
+        y: top + height / 2
+      }
+      const cell = player.cells
+        .flat()
+        .find(cell => isUnderPoint(point, cell))
+
+      console.log(cell);
     }
     //Вращение
     if (this.draggedShip && mouse.delta) {
       this.draggedShip.toggleDirection()
     }
     if (this.draggedShip && mouse.space) {
-      console.log(mouse.space);
       this.draggedShip.toggleDirection()
     }
 
