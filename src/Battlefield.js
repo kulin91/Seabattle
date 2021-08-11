@@ -72,7 +72,6 @@ class Battlefield {
   }
 
   addShip(ship, x, y) {
-
     if (this.ships.includes(ship)) {
       return false;
     }
@@ -80,7 +79,6 @@ class Battlefield {
     this.ships.push(ship);
 
     if (this.inField(x, y)) {
-      const { x, y } = ship
       const dx = ship.direction === 'row'
       const dy = ship.direction === 'column'
 
@@ -90,12 +88,12 @@ class Battlefield {
         const cx = x + dx * i
         const cy = y + dy * i
 
-        if (!this.inField(x, y)) {
+        if (!this.inField(cx, cy)) {
           placed = false
           break
         }
 
-        const item = matrix[cy][cx]
+        const item = this.matrix[cy][cx]
         if (!item.free) {
           placed = false
           break
@@ -116,6 +114,10 @@ class Battlefield {
 
     const index = this.ships.indexOf(ship);
     this.ships.splice(index, 1)
+
+    ship.x = null
+    ship.y = null
+
     this.#changed = true
     return true;
   }
@@ -144,5 +146,24 @@ class Battlefield {
       this.removeShot(shot)
     }
     return shots.length
+  }
+
+  randomize(ShipClass = Ship) {
+    this.removeAllShips();
+    for (let size = 4; size >= 1; size--) {
+      for (let n = 0; n < 5 - size; n++) {
+        const direction = getRandomFrom('row', 'column')
+        const ship = new ShipClass(size, direction)
+
+        while (!ship.placed) {
+          const x = getRandomBetween(0, 9)
+          const y = getRandomBetween(0, 9)
+
+          this.removeShip(ship)
+          this.addShip(ship, x, y)
+
+        }
+      }
+    }
   }
 }

@@ -27,13 +27,15 @@ class PreparationScene extends Scene {
   start() {
     const { player } = this.app
 
-    player.ships[0].x = 1
-    player.ships[0].y = 1
+    this.app.player.randomize(ShipView)
 
-    console.log(player.matrix);
-    console.log(player);
+    for (let i = 0; i < 10; i++) {
+      const ship = player.ships[i]
 
+      ship.startX = shipDatas[i].startX
+      ship.startY = shipDatas[i].startY
 
+    }
   }
   update() {
     const { mouse, player } = this.app
@@ -77,7 +79,16 @@ class PreparationScene extends Scene {
         .flat()
         .find(cell => isUnderPoint(point, cell))
 
-      console.log(cell);
+      if (cell) {
+        const x = parseInt(cell.dataset.x)
+        const y = parseInt(cell.dataset.y)
+
+        player.removeShip(ship)
+        player.addShip(ship, x, y)
+      } else {
+        player.removeShip(ship)
+        player.addShip(ship)
+      }
     }
     //Вращение
     if (this.draggedShip && mouse.delta) {

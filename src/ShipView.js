@@ -27,7 +27,6 @@ class ShipView extends Ship {
 
   toggleDirection() {
     const newDirection = this.direction === 'row' ? 'column' : 'row'
-    console.log(newDirection);
     this.setDirection(newDirection)
   }
 
