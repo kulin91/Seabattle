@@ -18,25 +18,36 @@ class PreparationScene extends Scene {
   draggedOffsetY = 0
 
   init() {
-    const { player } = this.app
-    for (const { size, direction, startX, startY } of shipDatas) {
-      const ship = new ShipView(size, direction, startX, startY);
-      player.addShip(ship);
-    }
+    this.randomize = this.randomize.bind(this)
+    this.manually = this.manually.bind(this)
+
+    this.manually()
+
+
   }
   start() {
-    const { player } = this.app
 
-    this.app.player.randomize(ShipView)
 
-    for (let i = 0; i < 10; i++) {
-      const ship = player.ships[i]
+    document
+      .querySelectorAll('app-actions')
+      .forEach(element => element.classList.add('hidden'))
 
-      ship.startX = shipDatas[i].startX
-      ship.startY = shipDatas[i].startY
+    document
+      .querySelector('[data-scene="preparation"]')
+      .classList.remove('hidden')
 
-    }
+    const randomizeButton = document.querySelector('[data-action="randomize"]')
+    randomizeButton.addEventListener('click', this.randomize)
+
+    const manuallyButton = document.querySelector('[data-action="manually"]')
+    manuallyButton.addEventListener('click', this.manually)
   }
+
+  stop() {
+    const randomizeButton = document.querySelector('[data-action="randomize"]')
+    randomizeButton.removeEventListener('click', this.randomize)
+  }
+
   update() {
     const { mouse, player } = this.app
 
@@ -50,6 +61,9 @@ class PreparationScene extends Scene {
         this.draggedShip = ship
         this.draggedOffsetX = mouse.x - shipRect.left;
         this.draggedOffsetY = mouse.y - shipRect.top;
+
+        ship.x = null
+        ship.y = null
       }
     }
 
@@ -98,12 +112,38 @@ class PreparationScene extends Scene {
       this.draggedShip.toggleDirection()
     }
 
+    if (player.complete) {
+      document.querySelector('[data-computer="simple"]').disabled = false
+      document.querySelector('[data-computer="middle"]').disabled = false
+      document.querySelector('[data-computer="hard"]').disabled = false
+    }
+    else {
+      document.querySelector('[data-computer="simple"]').disabled = true
+      document.querySelector('[data-computer="middle"]').disabled = true
+      document.querySelector('[data-computer="hard"]').disabled = true
+    }
+
   }
-  stop() {
-    console.log("PreparationScene stop")
+  randomize() {
+    const { player } = this.app
+
+    this.app.player.randomize(ShipView)
+
+    for (let i = 0; i < 10; i++) {
+      const ship = player.ships[i]
+
+      ship.startX = shipDatas[i].startX
+      ship.startY = shipDatas[i].startY
+    }
   }
 
+  manually() {
+    const { player } = this.app
 
-
-
+    player.removeAllShips()
+    for (const { size, direction, startX, startY } of shipDatas) {
+      const ship = new ShipView(size, direction, startX, startY);
+      player.addShip(ship);
+    }
+  }
 }
