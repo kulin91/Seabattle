@@ -150,6 +150,15 @@ class PreparationScene extends Scene {
   }
 
   startComputer(level) {
-    this.app.start('computer');
+    const matrix = this.app.player.matrix;
+    const withoutShipItems = matrix.flat().filter((item) => !item.ship);
+    let untouchables = [];
+    if (level === 'simple') {
+    } else if (level === 'middle') {
+      untouchables = getRandomSeveral(withoutShipItems, 20);
+    } else if (level === 'hard') {
+      untouchables = getRandomSeveral(withoutShipItems, 40);
+    }
+    this.app.start('computer', untouchables);
   }
 }

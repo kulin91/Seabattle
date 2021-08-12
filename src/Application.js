@@ -37,7 +37,7 @@ class Application {
     this.mouse.tick();
   }
 
-  start(sceneName) {
+  start(sceneName, ...args) {
     if (this.activeScene && this.activeScene.name === sceneName) {
       return false;
     }
@@ -47,12 +47,12 @@ class Application {
     }
 
     if (this.activeScene) {
-      this.activeScene.stop();
+      this.activeScene.stop(...args);
     }
 
     const scene = this.scenes[sceneName];
     this.activeScene = scene;
-    scene.start();
+    scene.start(...args);
 
     return true;
   }

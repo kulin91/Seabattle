@@ -8,13 +8,31 @@ function getRandomFrom(...args) {
 }
 
 function isUnderPoint(point, element) {
-  const { left, top, width, height } = element.getBoundingClientRect()
+  const { left, top, width, height } = element.getBoundingClientRect();
   const { x, y } = point;
 
   return left <= x && x <= left + width && top <= y && y <= top + height;
 }
 
 function addEventListener(element, ...args) {
-  element.addEventListener(...args)
-  return () => element.removeEventListener(...args)
+  element.addEventListener(...args);
+  return () => element.removeEventListener(...args);
+}
+
+function getRandomSeveral(array = [], size = 1) {
+  array = array.slice();
+
+  if (size > array.length) {
+    size = array.length;
+  }
+
+  const result = [];
+
+  while (result.length < size) {
+    const index = Math.floor(Math.random() * array.length);
+    const item = array.slice(index, 1)[0];
+    result.push(item);
+  }
+
+  return result;
 }

@@ -1,11 +1,16 @@
 class ComputerScene extends Scene {
-  start() {
+  untouchables = [];
+
+  start(untouchables) {
     const { opponent } = this.app;
     document.querySelectorAll('.app-actions').forEach((element) => element.classList.add('hidden'));
 
     document.querySelector('[data-scene="computer"]').classList.remove('hidden');
+
     opponent.clear();
     opponent.randomize(ShipView);
+
+    this.untouchables = untouchables;
   }
 
   update() {
