@@ -1,13 +1,15 @@
 class Application {
   mouse = null;
+
   player = null;
   opponent = null;
 
   scenes = {};
   activeScene = null;
 
-  constructor(scenes) {
+  constructor(scenes = {}) {
     const mouse = new Mouse(document.body);
+
     const player = new BattlefieldView(true);
     const opponent = new BattlefieldView(false);
 
@@ -47,7 +49,7 @@ class Application {
     }
 
     if (this.activeScene) {
-      this.activeScene.stop(...args);
+      this.activeScene.stop();
     }
 
     const scene = this.scenes[sceneName];

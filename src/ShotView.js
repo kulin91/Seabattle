@@ -1,5 +1,6 @@
 class ShotView extends Shot {
   div = null;
+
   constructor(x, y, variant = 'miss') {
     super(x, y, variant);
 
@@ -14,6 +15,7 @@ class ShotView extends Shot {
     if (!force && this.variant === variant) {
       return false;
     }
+
     this.variant = variant;
 
     this.div.classList.remove('shot-missed', 'shot-wounded', 'shot-killed');

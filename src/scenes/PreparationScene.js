@@ -14,16 +14,24 @@ const shipDatas = [
 class PreparationScene extends Scene {
   draggedShip = null;
   draggedOffsetX = 0;
-  draggedOffsetY = 0;
+  draggedOffestY = 0;
 
-  removeEventListener = [];
+  removeEventListeners = [];
 
   init() {
     this.manually();
   }
+
   start() {
-    this.removeEventListener = [];
-    document.querySelectorAll('app-actions').forEach((element) => element.classList.add('hidden'));
+    const { player, opponent } = this.app;
+
+    opponent.clear();
+    player.removeAllShots();
+    player.ships.forEach((ship) => (ship.killed = false));
+
+    this.removeEventListeners = [];
+
+    document.querySelectorAll('.app-actions').forEach((element) => element.classList.add('hidden'));
 
     document.querySelector('[data-scene="preparation"]').classList.remove('hidden');
 
@@ -33,34 +41,40 @@ class PreparationScene extends Scene {
     const middleButton = document.querySelector('[data-computer="middle"]');
     const hardButton = document.querySelector('[data-computer="hard"]');
 
-    this.removeEventListener.push(addEventListener(manuallyButton, 'click', () => this.manually()));
-    this.removeEventListener.push(
+    this.removeEventListeners.push(
+      addEventListener(manuallyButton, 'click', () => this.manually()),
+    );
+
+    this.removeEventListeners.push(
       addEventListener(randomizeButton, 'click', () => this.randomize()),
     );
 
-    this.removeEventListener.push(
+    this.removeEventListeners.push(
       addEventListener(simpleButton, 'click', () => this.startComputer('simple')),
     );
-    this.removeEventListener.push(
+
+    this.removeEventListeners.push(
       addEventListener(middleButton, 'click', () => this.startComputer('middle')),
     );
-    this.removeEventListener.push(
+
+    this.removeEventListeners.push(
       addEventListener(hardButton, 'click', () => this.startComputer('hard')),
     );
   }
 
   stop() {
-    for (const removeEventListener of this.removeEventListener) {
+    for (const removeEventListener of this.removeEventListeners) {
       removeEventListener();
     }
-    this.removeEventListener = [];
+
+    this.removeEventListeners = [];
   }
 
   update() {
     const { mouse, player } = this.app;
 
-    // Потанциально хотим начать тянуть корабль
-    if (!this.draggedShip && mouse.left && mouse.pLeft) {
+    // Потенциально хотим начать тянуть корабль
+    if (!this.draggedShip && mouse.left && !mouse.pLeft) {
       const ship = player.ships.find((ship) => ship.isUnder(mouse));
 
       if (ship) {
@@ -84,6 +98,7 @@ class PreparationScene extends Scene {
       this.draggedShip.div.style.left = `${x}px`;
       this.draggedShip.div.style.top = `${y}px`;
     }
+
     // Бросание
     if (!mouse.left && this.draggedShip) {
       const ship = this.draggedShip;
@@ -91,10 +106,12 @@ class PreparationScene extends Scene {
 
       const { left, top } = ship.div.getBoundingClientRect();
       const { width, height } = player.cells[0][0].getBoundingClientRect();
+
       const point = {
         x: left + width / 2,
         y: top + height / 2,
       };
+
       const cell = player.cells.flat().find((cell) => isUnderPoint(point, cell));
 
       if (cell) {
@@ -108,7 +125,8 @@ class PreparationScene extends Scene {
         player.addShip(ship);
       }
     }
-    //Вращение
+
+    // Врощаение
     if (this.draggedShip && mouse.delta) {
       this.draggedShip.toggleDirection();
     }
@@ -126,10 +144,11 @@ class PreparationScene extends Scene {
       document.querySelector('[data-computer="hard"]').disabled = true;
     }
   }
+
   randomize() {
     const { player } = this.app;
 
-    this.app.player.randomize(ShipView);
+    player.randomize(ShipView);
 
     for (let i = 0; i < 10; i++) {
       const ship = player.ships[i];
@@ -143,6 +162,7 @@ class PreparationScene extends Scene {
     const { player } = this.app;
 
     player.removeAllShips();
+
     for (const { size, direction, startX, startY } of shipDatas) {
       const ship = new ShipView(size, direction, startX, startY);
       player.addShip(ship);
@@ -153,12 +173,14 @@ class PreparationScene extends Scene {
     const matrix = this.app.player.matrix;
     const withoutShipItems = matrix.flat().filter((item) => !item.ship);
     let untouchables = [];
+
     if (level === 'simple') {
     } else if (level === 'middle') {
       untouchables = getRandomSeveral(withoutShipItems, 20);
     } else if (level === 'hard') {
       untouchables = getRandomSeveral(withoutShipItems, 40);
     }
+
     this.app.start('computer', untouchables);
   }
 }

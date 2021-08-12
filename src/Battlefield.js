@@ -5,6 +5,16 @@ class Battlefield {
   #matrix = null;
   #changed = true;
 
+  get loser() {
+    for (const ship of this.ships) {
+      if (!ship.killed) {
+        return false;
+      }
+    }
+
+    return true;
+  }
+
   get matrix() {
     if (!this.#changed) {
       this.#matrix;
@@ -14,17 +24,21 @@ class Battlefield {
 
     for (let y = 0; y < 10; y++) {
       const row = [];
+
       for (let x = 0; x < 10; x++) {
         const item = {
           x,
           y,
           ship: null,
           free: true,
+
           shoted: false,
           wounded: false,
         };
+
         row.push(item);
       }
+
       matrix.push(row);
     }
 
@@ -80,6 +94,7 @@ class Battlefield {
         return false;
       }
     }
+
     return true;
   }
 
@@ -121,10 +136,12 @@ class Battlefield {
           break;
         }
       }
+
       if (placed) {
         Object.assign(ship, { x, y });
       }
     }
+
     this.#changed = true;
     return true;
   }
@@ -150,6 +167,7 @@ class Battlefield {
     for (const ship of ships) {
       this.removeShip(ship);
     }
+
     return ships.length;
   }
 
@@ -185,6 +203,7 @@ class Battlefield {
           break;
         }
       }
+
       if (killed) {
         ship.killed = true;
 
@@ -197,33 +216,36 @@ class Battlefield {
         }
       }
     }
+
     this.#changed = true;
     return true;
   }
 
   removeShot(shot) {
-    if (this.shots.includes(shot)) {
+    if (!this.shots.includes(shot)) {
       return false;
     }
 
     const index = this.shots.indexOf(shot);
     this.shots.splice(index, 1);
-    this.#changed = true;
 
+    this.#changed = true;
     return true;
   }
 
   removeAllShots() {
-    const shots = this.ships.slice();
+    const shots = this.shots.slice();
 
     for (const shot of shots) {
       this.removeShot(shot);
     }
+
     return shots.length;
   }
 
   randomize(ShipClass = Ship) {
     this.removeAllShips();
+
     for (let size = 4; size >= 1; size--) {
       for (let n = 0; n < 5 - size; n++) {
         const direction = getRandomFrom('row', 'column');
@@ -239,6 +261,7 @@ class Battlefield {
       }
     }
   }
+
   clear() {
     this.removeAllShots();
     this.removeAllShips();

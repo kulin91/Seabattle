@@ -30,6 +30,7 @@ class BattlefieldView extends Battlefield {
       const tr = document.createElement('tr');
       tr.classList.add('battlefield-row');
       tr.dataset.y = y;
+
       for (let x = 0; x < 10; x++) {
         const td = document.createElement('td');
         td.classList.add('battlefield-item');
@@ -38,6 +39,7 @@ class BattlefieldView extends Battlefield {
         tr.append(td);
         row.push(td);
       }
+
       table.append(tr);
       this.cells.push(row);
     }
@@ -45,15 +47,20 @@ class BattlefieldView extends Battlefield {
     for (let x = 0; x < 10; x++) {
       const cell = this.cells[0][x];
       const marker = document.createElement('div');
+
       marker.classList.add('marker', 'marker-column');
       marker.textContent = 'ABCDEFGHIJ'[x];
+
       cell.append(marker);
     }
+
     for (let y = 0; y < 10; y++) {
       const cell = this.cells[y][0];
       const marker = document.createElement('div');
+
       marker.classList.add('marker', 'marker-row');
       marker.textContent = y + 1;
+
       cell.append(marker);
     }
   }
@@ -62,6 +69,7 @@ class BattlefieldView extends Battlefield {
     if (!super.addShip(ship, x, y)) {
       return false;
     }
+
     if (this.showShips) {
       this.dock.append(ship.div);
 
@@ -78,6 +86,7 @@ class BattlefieldView extends Battlefield {
         ship.div.style.top = `${ship.startY}px`;
       }
     }
+
     return true;
   }
 
@@ -115,12 +124,14 @@ class BattlefieldView extends Battlefield {
   }
 
   removeShot(shot) {
-    if (!super.addShot(shot)) {
+    if (!super.removeShot(shot)) {
       return false;
     }
-    if (Array.prototype.includes.call(this.polygon, shot.div)) {
+
+    if (Array.prototype.includes.call(this.polygon.children, shot.div)) {
       shot.div.remove();
     }
+
     return true;
   }
 }

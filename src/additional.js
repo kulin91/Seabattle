@@ -30,7 +30,7 @@ function getRandomSeveral(array = [], size = 1) {
 
   while (result.length < size) {
     const index = Math.floor(Math.random() * array.length);
-    const item = array.slice(index, 1)[0];
+    const item = array.splice(index, 1)[0];
     result.push(item);
   }
 
