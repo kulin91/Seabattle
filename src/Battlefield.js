@@ -187,15 +187,30 @@ class Battlefield {
       }
       if (killed) {
         ship.killed = true;
-        shot.setVariant('killed');
+
+        for (let i = 0; i < ship.size; i++) {
+          const cx = ship.x + dx * i;
+          const cy = ship.y + dy * i;
+
+          const shot = this.shots.find((shot) => shot.x === cx && shot.y === cy);
+          shot.setVariant('killed');
+        }
       }
     }
     this.#changed = true;
     return true;
   }
 
-  removeShot() {
+  removeShot(shot) {
+    if (this.shots.includes(shot)) {
+      return false;
+    }
+
+    const index = this.shots.indexOf(shot);
+    this.shots.splice(index, 1);
     this.#changed = true;
+
+    return true;
   }
 
   removeAllShots() {
@@ -223,5 +238,9 @@ class Battlefield {
         }
       }
     }
+  }
+  clear() {
+    this.removeAllShots();
+    this.removeAllShips();
   }
 }

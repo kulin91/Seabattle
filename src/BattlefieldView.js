@@ -110,4 +110,14 @@ class BattlefieldView extends Battlefield {
 
     return true;
   }
+
+  removeShot(shot) {
+    if (!super.addShot(shot)) {
+      return false;
+    }
+    if (Array.prototype.includes.call(this.polygon, shot.div)) {
+      shot.div.remove();
+    }
+    return true;
+  }
 }
