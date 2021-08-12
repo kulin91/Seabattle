@@ -4,3 +4,8 @@ const app = new Application({
 });
 
 app.start('preparation');
+
+document.querySelector('[data-action="randomize"]').click();
+document.querySelector('[data-computer="middle"]').disabled = false;
+
+document.querySelector('[data-computer="middle"]').click();
